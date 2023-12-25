@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"time"
 
@@ -19,6 +20,7 @@ type Config struct {
 	Previous string
 	Next     string
 	Cache    *cache.Cache
+	Pokedex  map[string]poke.Pokemon
 }
 
 func getCommands() map[string]Command {
@@ -48,13 +50,18 @@ func getCommands() map[string]Command {
 			Description: "Explore a location",
 			Callback:    commandExplore,
 		},
+		"catch": {
+			Name:        "catch",
+			Description: "Catch a Pokemon",
+			Callback:    commandCatch,
+		},
 	}
 }
 
 func New() (map[string]Command, *Config) {
 	commands := getCommands()
 	c := cache.NewCache(5 * time.Minute)
-	config := Config{Previous: "", Next: "", Cache: c}
+	config := Config{Previous: "", Next: "", Cache: c, Pokedex: map[string]poke.Pokemon{}}
 	return commands, &config
 }
 
@@ -119,7 +126,7 @@ func commandMapBack(config *Config, args ...string) error {
 
 func commandExplore(config *Config, args ...string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("explore command requires a location argument")
+		return fmt.Errorf("explore command requires a location name")
 	}
 
 	detail, err := poke.GetLocationAreaDetail("https://pokeapi.co/api/v2/location-area/"+args[0], config.Cache)
@@ -133,6 +140,31 @@ func commandExplore(config *Config, args ...string) error {
 	for _, p := range detail.PokemonEncounters {
 		fmt.Println(" -", p.Pokemon.Name)
 	}
+
+	return nil
+}
+
+func commandCatch(config *Config, args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("catch command requires a pokemon name")
+	}
+
+	pokemon, err := poke.GetPokemon("https://pokeapi.co/api/v2/pokemon/"+args[0], config.Cache)
+	if err != nil {
+		return fmt.Errorf("encountered an error fetching pokemon details %s", err)
+	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemon.Name)
+
+	diceRoll := rand.Intn(400)
+	time.Sleep(500 * time.Millisecond)
+	if pokemon.BaseExperience > diceRoll {
+		fmt.Println(pokemon.Name, "got away!")
+		return nil
+	}
+
+	fmt.Println(pokemon.Name, "was caught!")
+	config.Pokedex[pokemon.Name] = pokemon
 
 	return nil
 }
