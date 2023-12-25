@@ -8,7 +8,7 @@ import (
 	"github.com/josiahvehrs/go-pokedex/cache"
 )
 
-type AreaLocations struct {
+type LocationArea struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
 	Previous string `json:"previous"`
@@ -18,8 +18,8 @@ type AreaLocations struct {
 	} `json:"results"`
 }
 
-func GetAreaLocations(url string, c *cache.Cache) (AreaLocations, error) {
-	var locations AreaLocations
+func GetLocationAreas(url string, c *cache.Cache) (LocationArea, error) {
+	var locations LocationArea
 	var body []byte
 
 	body, ok := c.Get(url)

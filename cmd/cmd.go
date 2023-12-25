@@ -77,7 +77,7 @@ func commandMap(config *Config) error {
 		url = config.Next
 	}
 
-	locations, err := poke.GetAreaLocations(url, config.Cache)
+	locations, err := poke.GetLocationAreas(url, config.Cache)
 	if err != nil {
 		return fmt.Errorf("encountered an error fetching locations %s", err)
 	}
@@ -97,7 +97,7 @@ func commandMapBack(config *Config) error {
 		return fmt.Errorf("no previous locations")
 	}
 
-	locations, err := poke.GetAreaLocations(config.Previous, config.Cache)
+	locations, err := poke.GetLocationAreas(config.Previous, config.Cache)
 	if err != nil {
 		return fmt.Errorf("encountered an error fetching locations %s", err)
 	}
