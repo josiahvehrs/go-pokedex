@@ -12,7 +12,7 @@ import (
 type Command struct {
 	Name        string
 	Description string
-	Callback    func(config *Config) error
+	Callback    func(config *Config, args ...string) error
 }
 
 type Config struct {
@@ -43,6 +43,11 @@ func getCommands() map[string]Command {
 			Description: "Get previous 20 map locations",
 			Callback:    commandMapBack,
 		},
+		"explore": {
+			Name:        "explore",
+			Description: "Explore a location",
+			Callback:    commandExplore,
+		},
 	}
 }
 
@@ -53,7 +58,7 @@ func New() (map[string]Command, *Config) {
 	return commands, &config
 }
 
-func commandHelp(config *Config) error {
+func commandHelp(config *Config, args ...string) error {
 	commands := getCommands()
 	fmt.Println("Welcome to the Pokedex!", "Usage:")
 	fmt.Println()
@@ -64,12 +69,12 @@ func commandHelp(config *Config) error {
 	return nil
 }
 
-func commandExit(config *Config) error {
+func commandExit(config *Config, args ...string) error {
 	os.Exit(0)
 	return nil
 }
 
-func commandMap(config *Config) error {
+func commandMap(config *Config, args ...string) error {
 	var url string
 	if config.Next == "" {
 		url = "https://pokeapi.co/api/v2/location-area?offset=0&limit=20"
@@ -92,7 +97,7 @@ func commandMap(config *Config) error {
 	return nil
 }
 
-func commandMapBack(config *Config) error {
+func commandMapBack(config *Config, args ...string) error {
 	if config.Previous == "" {
 		return fmt.Errorf("no previous locations")
 	}
@@ -109,5 +114,9 @@ func commandMapBack(config *Config) error {
 		fmt.Printf("%s\n", area.Name)
 	}
 
+	return nil
+}
+
+func commandExplore(config *Config, args ...string) error {
 	return nil
 }

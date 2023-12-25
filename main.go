@@ -22,13 +22,14 @@ func main() {
 			fmt.Printf("Encountered an error: %v", err)
 		}
 
-		cmd, ok := commands[strings.TrimSpace(strings.ToLower(scanner.Text()))]
+		args := strings.Split(strings.TrimSpace(strings.ToLower(scanner.Text())), " ")
+		cmd, ok := commands[args[0]]
 		if !ok {
 			fmt.Println("Sorry, I couldn't understand that. Try again.")
 			continue
 		}
 
-		err = cmd.Callback(config)
+		err = cmd.Callback(config, args[1:]...)
 		if err != nil {
 			fmt.Printf("Encountered an error: %v\n", err)
 		}
