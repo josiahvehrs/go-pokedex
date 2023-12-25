@@ -37,12 +37,14 @@ type Pokemon struct {
 	BaseExperience int `json:"base_experience"`
 	Height         int `json:"height"`
 	ID             int `json:"id"`
-	Moves          []struct {
-		Move struct {
+	Abilities      []struct {
+		Ability struct {
 			Name string `json:"name"`
 			URL  string `json:"url"`
-		} `json:"move"`
-	} `json:"moves"`
+		} `json:"ability"`
+		IsHidden bool `json:"is_hidden"`
+		Slot     int  `json:"slot"`
+	} `json:"abilities"`
 	Name  string `json:"name"`
 	Stats []struct {
 		BaseStat int `json:"base_stat"`
