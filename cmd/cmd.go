@@ -60,6 +60,11 @@ func getCommands() map[string]Command {
 			Description: "Inspect a Pokemon",
 			Callback:    commandInspect,
 		},
+		"pokedex": {
+			Name:        "pokedex",
+			Description: "View your Pokedex",
+			Callback:    commandPokedex,
+		},
 	}
 }
 
@@ -169,6 +174,7 @@ func commandCatch(config *Config, args ...string) error {
 	}
 
 	fmt.Println(pokemon.Name, "was caught!")
+	fmt.Println("You may now inspect it.")
 	config.Pokedex[pokemon.Name] = pokemon
 
 	return nil
@@ -200,6 +206,20 @@ func commandInspect(config *Config, args ...string) error {
 	fmt.Println("Abilities:")
 	for _, a := range pokemon.Abilities {
 		fmt.Printf(" -slot-%d: %s\n", a.Slot, a.Ability.Name)
+	}
+
+	return nil
+}
+
+func commandPokedex(config *Config, args ...string) error {
+	if len(config.Pokedex) == 0 {
+		fmt.Println("Your Pokedex is empty. Catch some Pokemon to get started!")
+		return nil
+	}
+
+	fmt.Println("Your Pokedex:")
+	for _, p := range config.Pokedex {
+		fmt.Println(" -", p.Name)
 	}
 
 	return nil
