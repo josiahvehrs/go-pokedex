@@ -127,11 +127,12 @@ func commandExplore(config *Config, args ...string) error {
 		return fmt.Errorf("encountered an error fetching location area detail %s", err)
 	}
 
-	fmt.Println("Exploring ", args[0], "...")
+	fmt.Printf("Exploring %s...\n", args[0])
 	fmt.Println("Found Pokemon:")
 
 	for _, p := range detail.PokemonEncounters {
-		fmt.Println(" - ", p.Pokemon.Name)
+		fmt.Println(" -", p.Pokemon.Name)
 	}
+
 	return nil
 }
