@@ -118,5 +118,20 @@ func commandMapBack(config *Config, args ...string) error {
 }
 
 func commandExplore(config *Config, args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("explore command requires a location argument")
+	}
+
+	detail, err := poke.GetLocationAreaDetail("https://pokeapi.co/api/v2/location-area/"+args[0], config.Cache)
+	if err != nil {
+		return fmt.Errorf("encountered an error fetching location area detail %s", err)
+	}
+
+	fmt.Println("Exploring ", args[0], "...")
+	fmt.Println("Found Pokemon:")
+
+	for _, p := range detail.PokemonEncounters {
+		fmt.Println(" - ", p.Pokemon.Name)
+	}
 	return nil
 }
